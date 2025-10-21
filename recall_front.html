@@ -1,0 +1,62 @@
+<div class="front">
+  <div class="english">{{English definition}}</div>
+
+  <div class="smallEnglish">{{Grammar}}</div>
+
+  <div class="typeInput">{{type:Expression}}</div>
+
+  <!-- HIDDEN correct answer for live checking -->
+  <div id="correct-answer" data-answer="{{Expression}}" style="display: none"></div>
+  <script>
+    function norm(s) {
+      return (s || "").trim().replace(/\s+/g, " ").toLowerCase();
+    }
+
+    (function () {
+      const input = document.getElementById("typeans");
+      const correct =
+        document.getElementById("correct-answer")?.dataset?.answer ||
+        "";
+      const correctN = norm(correct);
+
+      function setNeutral() {
+        input.classList.remove("type-ok", "type-bad");
+        const card = document.querySelector(".card");
+        if (card) card.classList.remove("is-correct", "is-incorrect");
+      }
+
+      function checkNow() {
+        const userRaw = input.value;
+        const userN = norm(userRaw);
+
+        if (userN === "") {
+          setNeutral();
+          return;
+        }
+
+        const ok = userN === correctN;
+
+        input.classList.toggle("type-ok", ok);
+        input.classList.toggle("type-bad", !ok);
+
+        const card = document.querySelector(".card");
+        if (card) {
+          card.classList.toggle("is-correct", ok);
+          card.classList.toggle("is-incorrect", !ok);
+        }
+
+        window.ankiTypedValue = userRaw;
+      }
+
+      if (input) {
+        input.addEventListener("input", checkNow);
+        input.addEventListener("change", checkNow);
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") checkNow();
+        });
+
+        setNeutral();
+      }
+    })();
+  </script>
+</div>

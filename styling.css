@@ -1,0 +1,132 @@
+/* Overall card styling */
+.card {
+    font-family: ume-pms3;
+    font-size: 40px;
+    text-align: center;
+    color: black;
+    background-color: white;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+.card1 {
+    background-color: #fcf7ef;
+}
+.card2 {
+    background-color: #fcf7ef;
+}
+.card3 {
+    background-color: #fcf7ef;
+}
+
+/* Container for content */
+.card-content {
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/*text css */
+.japanese {
+    font-size: 2em;
+    margin: 10px 0;
+}
+
+.english {
+    font-size: 1.4em;
+    margin: 10px 0;
+}
+
+.smallEnglish {
+    font-size: 0.6em;
+    margin: 10px 0;
+}
+
+/*checkbox hack, allows click effects to show/hide the furigana */
+
+/* hide the checkbox */
+#demo {
+    display: none;
+}
+
+/* when checkbox is active, show for furigana */
+#demo:checked + label ruby rt {
+    visibility: visible;
+}
+
+/* furigana hidden */
+.furihide ruby rt {
+    visibility: hidden;
+}
+
+.front {
+    padding: 200px 20px 20px 20px;
+}
+
+.back {
+    padding: 200px 20px 20px 20px;
+}
+
+.typeInput {
+    padding: 0px 500px;
+}
+
+/* Styling for the type answer input */
+#typeans {
+    font-size: 0.8em;
+    padding: 8px 12px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s;
+    max-width: 90vw;
+    width: 100%;
+}
+
+/* Input correctness colors */
+#typeans.type-ok {
+    border: 2px solid #28a745; /* green */
+}
+
+#typeans.type-bad {
+    border: 2px solid #dc3545; /* red */
+}
+
+/* Result indicator box */
+.result-box {
+    display: inline-block;
+    padding: 8px 20px;
+    margin: 15px 0 10px 0;
+    border-radius: 6px;
+    font-size: 0.5em;
+    font-weight: bold;
+}
+
+.correct-box {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #28a745;
+}
+
+.incorrect-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #dc3545;
+}
+
+/* Keep FrontSide in the DOM but invisible */
+.frontside-probe {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    height: 0;
+    overflow: hidden;
+}
+
+.typed-show {
+    font-size: 0.9em;
+    margin-left: 8px;
+    opacity: 0.8;
+    font-style: italic;
+}

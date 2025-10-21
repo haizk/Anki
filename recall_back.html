@@ -1,0 +1,50 @@
+<div class="back">
+  <!-- Hidden FrontSide so Anki renders the type-answer comparison on the back -->
+  <div class="frontside-probe">
+    {{FrontSide}}
+  </div>
+
+  <div class="english">
+    {{English definition}}
+  </div>
+
+  <div class="smallEnglish">
+    {{Grammar}}
+  </div>
+
+  <!-- Result indicator box -->
+  <div id="result-indicator" class="result-box"></div>
+
+  <hr id="answer">
+
+  <div class="japanese">
+    {{furigana::Reading}}
+  </div>
+
+  <div class="smallEnglish">
+    {{Additional definitions}}
+  </div>
+
+  <script>
+    (function () {
+      function updateResultBox() {
+        const code = document.querySelector("code#typeans");
+        if (!code) return;
+
+        const incorrectChunk = code.querySelector(".typeBad, .typeMissed");
+        const ok = !incorrectChunk;
+
+        const box = document.getElementById("result-indicator");
+        if (!box) return;
+
+        const typed = (code.textContent || "").trim();
+
+        box.className = "result-box " + (ok ? "correct-box" : "incorrect-box");
+        box.innerHTML = (ok ? "Correct" : "Incorrect") +
+          (typed ? ` <span class="typed-show">(You typed: ${typed})</span>` : "");
+      }
+
+      updateResultBox();
+    })();
+  </script>
+</div>
