@@ -32,16 +32,12 @@
         if (!code) return;
 
         const incorrectChunk = code.querySelector(".typeBad, .typeMissed");
-        const ok = !incorrectChunk;
-
+        const correctChunk = code.querySelector(".typeGood");
+        
         let typed = "";
         const userSpans = code.querySelectorAll(".typeGood, .typeBad");
         if (userSpans.length) {
           typed = Array.from(userSpans).map(n => n.textContent || "").join("");
-        } else {
-          const clone = code.cloneNode(true);
-          clone.querySelectorAll(".typeMissed").forEach(n => n.remove());
-          typed = (clone.textContent || "");
         }
 
         typed = typed
@@ -49,6 +45,9 @@
           .replace(/[↓↙↘↖↗↘↙]/g, "")
           .replace(/\s+/g, " ")
           .trim();
+
+        // Only correct if: no incorrect chunks AND user actually typed something
+        const ok = !incorrectChunk && typed.length > 0 && correctChunk;
 
         const box = document.getElementById("result-indicator");
         if (!box) return;
