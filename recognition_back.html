@@ -21,23 +21,31 @@
         const code = document.querySelector("code#typeans");
         if (!code) return;
 
-        const incorrectChunk = code.querySelector(
-          ".typeBad, .typeMissed"
-        );
+        const incorrectChunk = code.querySelector(".typeBad, .typeMissed");
         const ok = !incorrectChunk;
+
+        let typed = "";
+        const userSpans = code.querySelectorAll(".typeGood, .typeBad");
+        if (userSpans.length) {
+          typed = Array.from(userSpans).map(n => n.textContent || "").join("");
+        } else {
+          const clone = code.cloneNode(true);
+          clone.querySelectorAll(".typeMissed").forEach(n => n.remove());
+          typed = (clone.textContent || "");
+        }
+
+        typed = typed
+          .replace(/\u200B/g, "")
+          .replace(/[↓↙↘↖↗↘↙]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
 
         const box = document.getElementById("result-indicator");
         if (!box) return;
 
-        const typed = code.textContent?.trim() || "";
-
-        box.className =
-          "result-box " + (ok ? "correct-box" : "incorrect-box");
-        box.innerHTML =
-          (ok ? "Correct" : "Incorrect") +
-          (typed
-            ? ` <span class="typed-show">(You typed: ${typed})</span>`
-            : "");
+        box.className = "result-box " + (ok ? "correct-box" : "incorrect-box");
+        box.innerHTML = (ok ? "Correct" : "Incorrect") +
+          (typed ? ` <span class="typed-show">(You typed: ${typed})</span>` : "");
       }
 
       updateResultBox();
