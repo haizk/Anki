@@ -17,13 +17,21 @@
 
   <script>
     (function () {
+      // Disable any input fields from FrontSide to prevent typing on back
+      const frontInput = document.querySelector(".frontside-probe input#typeans");
+      if (frontInput) {
+        frontInput.blur();
+        frontInput.disabled = true;
+        frontInput.readOnly = true;
+      }
+
       function updateResultBox() {
         const code = document.querySelector("code#typeans");
         if (!code) return;
 
         const incorrectChunk = code.querySelector(".typeBad, .typeMissed");
         const correctChunk = code.querySelector(".typeGood");
-        
+
         let typed = "";
         const userSpans = code.querySelectorAll(".typeGood, .typeBad");
         if (userSpans.length) {

@@ -18,7 +18,6 @@
       const correctN = norm(correct);
 
       let autoFlipped = false;
-      let composing = false;
 
       function setNeutral() {
         input.classList.remove("type-ok", "type-bad");
@@ -30,6 +29,27 @@
       function flipNow() {
         if (autoFlipped) return;
         autoFlipped = true;
+
+        if (input) {
+          input.blur();
+
+          // Create a temporary hidden input to steal focus and kill IME
+          const tempInput = document.createElement('input');
+          tempInput.style.position = 'absolute';
+          tempInput.style.opacity = '0';
+          tempInput.style.pointerEvents = 'none';
+          document.body.appendChild(tempInput);
+          tempInput.focus();
+          setTimeout(() => {
+            tempInput.blur();
+            document.body.removeChild(tempInput);
+          }, 50);
+
+          input.disabled = true;
+          input.readOnly = true;
+          input.style.cursor = "not-allowed";
+        }
+
         setTimeout(() => {
           try {
             if (typeof pycmd === "function") {
@@ -44,12 +64,16 @@
           } catch (e) {
             console.error("Auto-flip failed:", e);
             autoFlipped = false;
+            if (input) {
+              input.disabled = false;
+              input.style.cursor = "";
+            }
           }
         }, 500);
       }
 
       function checkNow() {
-        if (!input || composing) return;
+        if (!input) return;
 
         const userRaw = input.value;
         const userN = norm(userRaw);
@@ -74,10 +98,6 @@
       }
 
       if (input) {
-        // IME guards so user doesn't flip mid-composition
-        // input.addEventListener("compositionstart", () => { composing = true; });
-        // input.addEventListener("compositionend", () => { composing = false; checkNow(); });
-
         input.addEventListener("input", checkNow);
         input.addEventListener("change", checkNow);
         input.addEventListener("keydown", (e) => {
