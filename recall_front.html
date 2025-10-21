@@ -14,10 +14,11 @@
 
     (function () {
       const input = document.getElementById("typeans");
-      const correct =
-        document.getElementById("correct-answer")?.dataset?.answer ||
-        "";
+      const correct = document.getElementById("correct-answer")?.dataset?.answer || "";
       const correctN = norm(correct);
+
+      let autoFlipped = false;
+      let composing = false;
 
       function setNeutral() {
         input.classList.remove("type-ok", "type-bad");
@@ -25,7 +26,31 @@
         if (card) card.classList.remove("is-correct", "is-incorrect");
       }
 
+      // Auto-submit (flip) when correct
+      function flipNow() {
+        if (autoFlipped) return;
+        autoFlipped = true;
+        setTimeout(() => {
+          try {
+            if (typeof pycmd === "function") {
+              pycmd("ans");
+            } else {
+              const btn = document.getElementById("ansbut");
+              if (btn) btn.click();
+              else {
+                document.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", keyCode: 13, which: 13, bubbles: true }));
+              }
+            }
+          } catch (e) {
+            console.error("Auto-flip failed:", e);
+            autoFlipped = false;
+          }
+        }, 500);
+      }
+
       function checkNow() {
+        if (!input || composing) return;
+
         const userRaw = input.value;
         const userN = norm(userRaw);
 
@@ -45,10 +70,14 @@
           card.classList.toggle("is-incorrect", !ok);
         }
 
-        window.ankiTypedValue = userRaw;
+        if (ok) flipNow();
       }
 
       if (input) {
+        // IME guards so user doesn't flip mid-composition
+        // input.addEventListener("compositionstart", () => { composing = true; });
+        // input.addEventListener("compositionend", () => { composing = false; checkNow(); });
+
         input.addEventListener("input", checkNow);
         input.addEventListener("change", checkNow);
         input.addEventListener("keydown", (e) => {
